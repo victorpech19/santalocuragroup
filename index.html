@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Santa Locura — Espacio Gastronómico | Viladecans</title>
+<meta name="description" content="Santa Locura - Burgers salvajes, cachopos XXL y locura en cada plato. Viladecans, Barcelona.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --yellow: #FFD600;
+  --yellow-soft: #ffe34d;
+  --red: #FF2D2D;
+  --bg: #0a0a0a;
+  --bg-card: #141414;
+  --bg-elevated: #1c1c1c;
+  --text: #f5f5f5;
+  --text-mid: #bbb;
+  --text-dim: #999;
+  --font-display: 'Bebas Neue', sans-serif;
+  --font-body: 'Outfit', sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; text-decoration: none; }
+img { max-width: 100%; display: block; }
+.page { display: none; min-height: 100vh; }
+.page.active { display: block; }
+
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px;
+}
+
+.navbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  padding: 0 2rem; height: 70px;
+  display: flex; align-items: center; justify-content: space-between;
+  background: rgba(10,10,10,0.88);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255,214,0,0.08);
+}
+.nav-logo { cursor: pointer; display: flex; align-items: center; transition: transform 0.3s; }
+.nav-logo:hover { transform: scale(1.05); }
+.nav-logo img { height: 44px; }
+.nav-links { display: flex; gap: 1.8rem; align-items: center; list-style: none; }
+.nav-links a {
+  font-size: 0.78rem; font-weight: 500; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--text-mid); transition: color 0.3s; position: relative;
+}
+.nav-links a::after {
+  content: ''; position: absolute; bottom: -4px; left: 0;
+  width: 0; height: 2px; background: var(--yellow); transition: width 0.3s;
+}
+.nav-links a:hover, .nav-links a.active { color: var(--yellow); }
+.nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+.nav-cta {
+  background: var(--yellow) !important; color: #000 !important;
+  padding: 0.5rem 1.2rem; border-radius: 4px; font-weight: 700;
+  font-size: 0.75rem !important; letter-spacing: 1.5px;
+  transition: transform 0.3s, box-shadow 0.3s !important;
+}
+.nav-cta::after { display: none !important; }
+.nav-cta:hover { transform: translateY(-2px) !important; box-shadow: 0 4px 20px rgba(255,214,0,0.4); }
+.hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; z-index: 1001; }
+.hamburger span { width: 28px; height: 2px; background: var(--yellow); transition: 0.3s; }
+.hamburger.open span:nth-child(1) { transform: rotate(45deg) translateY(7px); }
+.hamburger.open span:nth-child(2) { opacity: 0; }
+.hamburger.open span:nth-child(3) { transform: rotate(-45deg) translateY(-7px); }
+@media(max-width:900px) {
+  .hamburger { display: flex; }
+  .nav-links {
+    position: fixed; top: 0; right: -100%; width: 80vw; max-width: 350px;
+    height: 100vh; background: var(--bg-card); flex-direction: column;
+    padding: 6rem 2rem 2rem; gap: 1.5rem;
+    transition: right 0.4s cubic-bezier(0.65,0,0.35,1);
+    border-left: 1px solid rgba(255,214,0,0.1);
+  }
+  .nav-links.open { right: 0; }
+  .nav-links a { font-size: 1rem; }
+}
+
+.hero {
+  position: relative; height: 100vh;
+  display: flex; align-items: center; justify-content: center; overflow: hidden;
+}
+.hero-bg { position: absolute; inset: 0; background: var(--bg); }
+.hero-bg::before {
+  content: ''; position: absolute; inset: 0;
+  background-image: url('pattern.jpg');
+  background-size: 400px; background-repeat: repeat; opacity: 0.22;
+}
+<!-- Comentario de una línea 
+.hero-bg::after {
+  content: ''; position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse at 30% 70%, rgba(255,214,0,0.12) 0%, transparent 55%),
+    radial-gradient(ellipse at 70% 30%, rgba(255,45,45,0.06) 0%, transparent 55%),
+    radial-gradient(ellipse at 50% 50%, rgba(0,0,0,0.4) 0%, transparent 80%);
+}-->
+.hero-content { position: relative; text-align: center; z-index: 2; padding: 0 2rem; }
+.hero-logo {
+  width: clamp(220px, 35vw, 400px); margin: 0 auto 1.5rem;
+  animation: fadeInUp 0.8s ease-out both;
+  filter: drop-shadow(0 0 40px rgba(255,214,0,0.15));
+}
+.hero-badge {
+  display: inline-block; font-size: 0.7rem; letter-spacing: 4px;
+  text-transform: uppercase; color: var(--yellow);
+  border: 1px solid rgba(255,214,0,0.3); padding: 0.4rem 1.2rem;
+  margin-bottom: 2rem; animation: fadeInUp 0.8s ease-out both;
+}
+.hero-tagline {
+  font-family: var(--font-display); font-size: clamp(2.5rem, 6vw, 5rem);
+  line-height: 1; letter-spacing: 3px; color: var(--text);
+  animation: fadeInUp 0.8s 0.2s ease-out both;
+}
+.hero-tagline .accent { color: var(--yellow); }
+.hero-sub {
+  font-size: clamp(1rem, 2vw, 1.3rem); font-weight: 300;
+  color: var(--text-mid); margin-top: 1rem; letter-spacing: 2px;
+  animation: fadeInUp 0.8s 0.4s ease-out both;
+}
+.hero-cta-group {
+  display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
+  margin-top: 2.5rem; animation: fadeInUp 0.8s 0.6s ease-out both;
+}
+.btn {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 0.85rem 2rem; font-family: var(--font-body); font-size: 0.8rem;
+  font-weight: 600; letter-spacing: 2px; text-transform: uppercase;
+  border: none; border-radius: 4px; cursor: pointer; transition: all 0.3s;
+}
+.btn-primary { background: var(--yellow); color: #000; }
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(255,214,0,0.3); }
+.btn-white { background: #fff; color: #000; }
+.btn-white:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(255,255,255,0.2); }
+.btn-outline { background: transparent; color: var(--text); border: 1px solid rgba(255,255,255,0.25); }
+.btn-outline:hover { border-color: var(--yellow); color: var(--yellow); }
+.hero-scroll { position: absolute; bottom: 2rem; left: 45%; transform: translateX(-50%); animation: bounce 2s infinite; z-index: 2; }
+.hero-scroll span { display: block; width: 2px; height: 40px; background: linear-gradient(to bottom, var(--yellow), transparent); }
+@keyframes bounce { 0%,100%{transform:translateX(-50%) translateY(2px)} 50%{transform:translateX(-50%) translateY(15px)} }
+@keyframes fadeInUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+
+section { padding: 6rem 2rem; }
+.section-tag { font-size: 0.7rem; letter-spacing: 4px; text-transform: uppercase; color: var(--yellow); margin-bottom: 1rem; }
+.section-title { font-family: var(--font-display); font-size: clamp(2.5rem, 6vw, 5rem); line-height: 1; margin-bottom: 1.5rem; }
+.section-title .accent { color: var(--yellow); }
+.container { max-width: 1200px; margin: 0 auto; }
+
+.marquee-wrap { overflow: hidden; padding: 1.5rem 0; border-top: 1px solid rgba(255,214,0,0.1); border-bottom: 1px solid rgba(255,214,0,0.1); }
+.marquee-track { display: flex; width: max-content; animation: marquee 25s linear infinite; }
+.marquee-track span { font-family: var(--font-display); font-size: 1.4rem; letter-spacing: 4px; color: var(--text-dim); white-space: nowrap; padding: 0 2rem; }
+.marquee-track span em { font-style: normal; color: var(--yellow); }
+@keyframes marquee { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+
+.highlights { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-top: 3rem; }
+.highlight-card {
+  background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 8px; padding: 2.5rem 2rem; text-align: center;
+  transition: transform 0.4s, border-color 0.4s; position: relative; overflow: hidden;
+}
+.highlight-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--yellow); transform: scaleX(0); transition: transform 0.4s; }
+.highlight-card:hover { transform: translateY(-6px); border-color: rgba(255,214,0,0.15); }
+.highlight-card:hover::before { transform: scaleX(1); }
+.highlight-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+.highlight-card h3 { font-family: var(--font-display); font-size: 1.5rem; letter-spacing: 1px; margin-bottom: 0.75rem; }
+.highlight-card p { font-size: 0.9rem; line-height: 1.6; color: var(--text-mid); }
+@media(max-width:768px) { .highlights { grid-template-columns: 1fr; } }
+
+.photo-gallery { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; padding: 0 0.5rem; }
+.photo-gallery .pg-item { aspect-ratio: 1; border-radius: 6px; overflow: hidden; position: relative; cursor: pointer; }
+.photo-gallery .pg-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+.photo-gallery .pg-item:hover img { transform: scale(1.08); }
+.photo-gallery .pg-item .pg-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 50%); display: flex; align-items: flex-end; padding: 1rem; opacity: 0; transition: opacity 0.3s; }
+.photo-gallery .pg-item:hover .pg-overlay { opacity: 1; }
+.pg-overlay span { font-family: var(--font-display); font-size: 1rem; letter-spacing: 1px; color: var(--yellow); }
+@media(max-width:600px) { .photo-gallery { grid-template-columns: repeat(2, 1fr); } }
+
+.diagonal-banner { background: var(--yellow); color: #000; padding: 3.5rem 2rem; text-align: center; clip-path: polygon(0 15%, 100% 0%, 100% 85%, 0% 100%); margin: 4rem 0; }
+.diagonal-banner h2 { font-family: var(--font-display); font-size: clamp(2rem, 5vw, 3.5rem); letter-spacing: 2px; }
+.diagonal-banner p { font-size: 1rem; margin-top: 0.5rem; opacity: 0.7; }
+
+.about-hero { padding-top: 120px; text-align: center; }
+.about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; margin-top: 4rem; }
+.about-text p { font-size: 1.05rem; line-height: 1.8; color: var(--text-mid); margin-bottom: 1.5rem; }
+.about-text .fire { color: var(--yellow); font-weight: 600; }
+.about-visual { position: relative; border-radius: 8px; overflow: hidden; aspect-ratio: 3/4; }
+.about-visual img { width: 100%; height: 100%; object-fit: cover; }
+.about-chef-section { display: grid; grid-template-columns: 400px 1fr; gap: 3rem; align-items: center; margin-top: 4rem; padding: 3rem; background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; }
+.about-chef-img { border-radius: 8px; overflow: hidden; aspect-ratio: 1; }
+.about-chef-img img { width: 100%; height: 100%; object-fit: cover; }
+.about-chef-info h3 { font-family: var(--font-display); font-size: 2.5rem; letter-spacing: 1px; margin-bottom: 0.5rem; }
+.about-chef-info .chef-role { color: var(--yellow); font-size: 0.85rem; letter-spacing: 2px; text-transform: uppercase; font-weight: 600; margin-bottom: 1.5rem; }
+.about-chef-info p { color: var(--text-mid); line-height: 1.8; font-size: 1rem; }
+.about-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; margin-top: 4rem; padding: 3rem 0; border-top: 1px solid rgba(255,255,255,0.06); border-bottom: 1px solid rgba(255,255,255,0.06); }
+.stat-item { text-align: center; }
+.stat-num { font-family: var(--font-display); font-size: 3rem; color: var(--yellow); }
+.stat-label { font-size: 0.8rem; color: var(--text-mid); letter-spacing: 1px; text-transform: uppercase; margin-top: 0.25rem; }
+.about-gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-top: 2rem; }
+.about-gallery-grid .agi { border-radius: 8px; overflow: hidden; aspect-ratio: 4/3; }
+.about-gallery-grid .agi img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s; }
+.about-gallery-grid .agi:hover img { transform: scale(1.05); }
+@media(max-width:768px) { .about-grid{grid-template-columns:1fr} .about-chef-section{grid-template-columns:1fr;padding:1.5rem} .about-stats{grid-template-columns:repeat(2,1fr)} .about-gallery-grid{grid-template-columns:1fr 1fr} }
+
+.carta-hero { padding-top: 120px; text-align: center; }
+.carta-description { max-width: 700px; margin: 1.5rem auto 0; color: var(--text-mid); line-height: 1.7; font-size: 1.05rem; }
+.carta-photo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 3rem; }
+.carta-photo-grid .cpg-item { border-radius: 8px; overflow: hidden; aspect-ratio: 1; position: relative; }
+.carta-photo-grid .cpg-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+.carta-photo-grid .cpg-item:hover img { transform: scale(1.06); }
+.carta-photo-grid .cpg-item .cpg-label { position: absolute; bottom: 0; left: 0; right: 0; padding: 1.2rem; background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 100%); }
+.cpg-label h3 { font-family: var(--font-display); font-size: 1.2rem; letter-spacing: 1px; color: var(--yellow); }
+.cpg-label p { font-size: 0.8rem; color: var(--text-mid); margin-top: 0.2rem; }
+.carta-cta-wrap { text-align: center; margin-top: 3rem; }
+@media(max-width:600px) { .carta-photo-grid{grid-template-columns:1fr 1fr} }
+
+.franq-hero { padding-top: 120px; text-align: center; }
+.franq-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-top: 3rem; }
+.franq-card { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 2.5rem 2rem; text-align: center; transition: border-color 0.3s, transform 0.3s; }
+.franq-card:hover { border-color: rgba(255,214,0,0.2); transform: translateY(-4px); }
+.franq-card .franq-num { font-family: var(--font-display); font-size: 3rem; color: var(--yellow); margin-bottom: 1rem; }
+.franq-card h3 { font-family: var(--font-display); font-size: 1.4rem; letter-spacing: 1px; margin-bottom: 0.75rem; }
+.franq-card p { font-size: 0.9rem; color: var(--text-mid); line-height: 1.6; }
+@media(max-width:768px) { .franq-grid{grid-template-columns:1fr} }
+
+.contacto-hero { padding-top: 120px; text-align: center; }
+.contacto-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; margin-top: 3rem; }
+.contacto-info-card { background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 2.5rem; }
+.contacto-info-card h3 { font-family: var(--font-display); font-size: 1.6rem; letter-spacing: 1px; margin-bottom: 1.5rem; color: var(--yellow); }
+.info-line { display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1.2rem; font-size: 0.95rem; color: var(--text-mid); }
+.info-line .il-icon { color: var(--yellow); font-size: 1.2rem; flex-shrink: 0; width: 24px; text-align: center; }
+.horario-table { width: 100%; margin-top: 1rem; }
+.horario-row { display: flex; justify-content: space-between; padding: 0.6rem 0; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 0.9rem; }
+.horario-row .day { color: var(--text); font-weight: 500; }
+.horario-row .hours { color: var(--text-mid); }
+.horario-row.closed .hours { color: var(--red); }
+.map-container { border-radius: 8px; overflow: hidden; background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); height: 100%; min-height: 400px; }
+.map-container iframe { width: 100%; height: 100%; border: 0; filter: invert(0.9) hue-rotate(180deg) saturate(0.3) brightness(0.7); }
+.social-links { display: flex; gap: 1rem; margin-top: 2rem; }
+.social-link { display: flex; align-items: center; gap: 0.5rem; padding: 0.6rem 1.4rem; border: 1px solid rgba(255,255,255,0.12); border-radius: 50px; font-size: 0.85rem; font-weight: 500; transition: all 0.3s; }
+.social-link:hover { border-color: var(--yellow); color: var(--yellow); transform: translateY(-2px); }
+@media(max-width:768px) { .contacto-grid{grid-template-columns:1fr} }
+
+.legal-hero { padding-top: 120px; }
+.legal-content { max-width: 800px; margin: 3rem auto 0; background: var(--bg-card); border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 3rem; }
+.legal-content h3 { font-family: var(--font-display); font-size: 1.4rem; letter-spacing: 1px; color: var(--yellow); margin-bottom: 1rem; margin-top: 2rem; }
+.legal-content h3:first-child { margin-top: 0; }
+.legal-content p { font-size: 0.95rem; color: var(--text-mid); line-height: 1.8; margin-bottom: 1rem; }
+
+footer { border-top: 1px solid rgba(255,214,0,0.08); padding: 4rem 2rem 2rem; }
+.footer-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem; }
+.footer-brand .f-logo { height: 50px; margin-bottom: 1rem; }
+.footer-brand p { font-size: 0.85rem; color: var(--text-mid); line-height: 1.6; max-width: 300px; }
+.footer-col h4 { font-family: var(--font-display); font-size: 1rem; letter-spacing: 2px; color: var(--yellow); margin-bottom: 1rem; }
+.footer-col ul { list-style: none; }
+.footer-col li { margin-bottom: 0.5rem; }
+.footer-col a { font-size: 0.85rem; color: var(--text-mid); transition: color 0.3s; }
+.footer-col a:hover { color: var(--yellow); }
+.footer-bottom { max-width: 1200px; margin: 3rem auto 0; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; align-items: center; font-size: 0.75rem; color: var(--text-dim); }
+@media(max-width:768px) { .footer-grid{grid-template-columns:1fr 1fr} }
+@media(max-width:480px) { .footer-grid{grid-template-columns:1fr} }
+
+.reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.8s, transform 0.8s; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="nav-logo" onclick="navigate('home')">
+    <img src="logo_nobg.png" alt="Santa Locura">
+  </div>
+  <div class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></div>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#" onclick="navigate('home')" data-page="home">Home</a></li>
+    <li><a href="#" onclick="navigate('carta')" data-page="carta">Carta</a></li>
+    <li><a href="#" onclick="navigate('about')" data-page="about">Sobre Nosotros</a></li>
+    <li><a href="#" onclick="navigate('franquicia')" data-page="franquicia">🎯 Tu Santa Locura</a></li>
+    <li><a href="#" onclick="navigate('contacto')" data-page="contacto">Contacto</a></li>
+    <li><a href="#" onclick="navigate('legal')" data-page="legal">Legal</a></li>
+    <li><a href="https://santalocura.myrestoo.net/" target="_blank" class="nav-cta">Reservar</a></li>
+  </ul>
+</nav>
+
+<!-- HOME -->
+<div class="page active" id="page-home">
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+      <img src="logo2.png" alt="Santa Locura" class="hero-logo">
+      <div class="hero-badge">Espacio Gastronómico — Viladecans</div>
+      <h1 class="hero-tagline">IDEAS, ACCIONES, <span class="accent">LOCURA</span></h1>
+      <p class="hero-sub">Eso somos</p>
+      <div class="hero-cta-group">
+        <a href="https://santalocura.myrestoo.net/" target="_blank" class="btn btn-primary">Reserva tu mesa</a>
+        <a href="https://qr9398.buenacarta.com/" target="_blank" class="btn btn-white">Ver carta</a>
+      </div>
+    </div>
+    <div class="hero-scroll"><span></span></div>
+  </section>
+
+  <div class="marquee-wrap">
+    <div class="marquee-track">
+      <span>BURGERS SALVAJES <em>★</em></span><span>CACHOPOS XXL <em>★</em></span><span>FOOD PORN <em>★</em></span><span>SALSAS LOCAS <em>★</em></span><span>RACIONES GIGANTES <em>★</em></span><span>DULCE + SALADO + CRUJIENTE <em>★</em></span><span>PAN DE COLORES <em>★</em></span><span>LOCURA TOTAL <em>★</em></span>
+      <span>BURGERS SALVAJES <em>★</em></span><span>CACHOPOS XXL <em>★</em></span><span>FOOD PORN <em>★</em></span><span>SALSAS LOCAS <em>★</em></span><span>RACIONES GIGANTES <em>★</em></span><span>DULCE + SALADO + CRUJIENTE <em>★</em></span><span>PAN DE COLORES <em>★</em></span><span>LOCURA TOTAL <em>★</em></span>
+    </div>
+  </div>
+
+  <section>
+    <div class="container reveal">
+      <div class="section-tag">¿Qué nos hace diferentes?</div>
+      <div class="section-title">No venimos a jugar.<br>Venimos a <span class="accent">liarla.</span></div>
+      <div class="highlights">
+        <div class="highlight-card">
+          <div class="highlight-icon">🍔</div>
+          <h3>BURGERS SALVAJES</h3>
+          <p>Cargadas hasta arriba. Combinaciones que no deberían existir… pero existen y son <span style="color:var(--yellow)">brutales</span>. Pan de colores, salsas locas, carne potente.</p>
+        </div>
+        <div class="highlight-card">
+          <div class="highlight-icon">🔥</div>
+          <h3>RACIONES XXL</h3>
+          <p>Aquí no hay platos normales. <span style="color:var(--yellow)">Cachopos de casi dos kilos</span>, canelones gigantes y raciones que alimentan ejércitos.</p>
+        </div>
+        <div class="highlight-card">
+          <div class="highlight-icon">🤯</div>
+          <h3>LOCURA TOTAL</h3>
+          <p>Mezclas dulces + saladas + crujientes que te vuelan la cabeza. Cuando crees que ya lo has visto todo… <span style="color:var(--yellow)">BOOM</span>.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding-top: 0;">
+    <div class="container reveal">
+      <div class="section-tag">Nuestros platos</div>
+      <div class="section-title">PURO <span class="accent">FOOD PORN</span></div>
+      <div class="photo-gallery">
+        <div class="pg-item"><img src="burger1.jpg" alt="Smash burger" loading="lazy"><div class="pg-overlay"><span>SMASH BURGER</span></div></div>
+        <div class="pg-item"><img src="burger2.jpg" alt="Burger artesanal" loading="lazy"><div class="pg-overlay"><span>BURGER ARTESANAL</span></div></div>
+        <div class="pg-item"><img src="burger3.jpg" alt="Bacon cheese" loading="lazy"><div class="pg-overlay"><span>BACON & CHEESE</span></div></div>
+        <div class="pg-item"><img src="burger_rosa.jpg" alt="Pan de colores" loading="lazy"><div class="pg-overlay"><span>PAN DE COLORES</span></div></div>
+        <div class="pg-item"><img src="cachopo.jpg" alt="Cachopo XXL" loading="lazy"><div class="pg-overlay"><span>CACHOPO XXL</span></div></div>
+        <div class="pg-item"><img src="quesos.jpg" alt="Quesos" loading="lazy"><div class="pg-overlay"><span>TABLA DE QUESOS</span></div></div>
+        <div class="pg-item"><img src="risotto.jpg" alt="Risotto" loading="lazy"><div class="pg-overlay"><span>RISOTTO</span></div></div>
+        <div class="pg-item"><img src="albondigas.jpg" alt="Albóndigas" loading="lazy"><div class="pg-overlay"><span>ALBÓNDIGAS</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="diagonal-banner reveal">
+    <h2>¿Tienes hambre de verdad?</h2>
+    <p>Donde comer es una experiencia… y salir lleno es obligatorio.</p>
+  </div>
+</div>
+
+<!-- CARTA -->
+<div class="page" id="page-carta">
+  <section class="carta-hero">
+    <div class="container">
+      <div class="section-tag reveal">Nuestra carta</div>
+      <div class="section-title reveal">LA <span class="accent">CARTA</span></div>
+      <p class="carta-description reveal">Todo hecho con <span style="color:var(--yellow)">locura, pasión</span> y ganas de volarte la cabeza. Smash burgers salvajes, cachopos XXL, tapas que no deberían existir, arroces, pasta y postres adictivos. <span style="color:var(--yellow)">Elige tu veneno.</span></p>
+      <div class="carta-photo-grid reveal">
+        <div class="cpg-item"><img src="burger1.jpg" alt="Smash Burger" loading="lazy"><div class="cpg-label"><h3>SMASH BURGERS</h3><p>Carne aplastada, crujiente y jugosa</p></div></div>
+        <div class="cpg-item"><img src="burger_rosa.jpg" alt="Pan de colores" loading="lazy"><div class="cpg-label"><h3>PAN DE COLORES</h3><p>Lo nunca visto en una burger</p></div></div>
+        <div class="cpg-item"><img src="cachopo.jpg" alt="Cachopo XXL" loading="lazy"><div class="cpg-label"><h3>CACHOPO XXL</h3><p>Casi 2kg de locura asturiana</p></div></div>
+        <div class="cpg-item"><img src="quesos.jpg" alt="Tapas" loading="lazy"><div class="cpg-label"><h3>TAPAS & TABLAS</h3><p>Para compartir (o no)</p></div></div>
+        <div class="cpg-item"><img src="risotto.jpg" alt="Risotto" loading="lazy"><div class="cpg-label"><h3>ARROCES & PASTA</h3><p>Tradición con toque loco</p></div></div>
+        <div class="cpg-item"><img src="albondigas.jpg" alt="Raciones" loading="lazy"><div class="cpg-label"><h3>RACIONES</h3><p>Tamaño generoso, siempre</p></div></div>
+      </div>
+      <div class="carta-cta-wrap reveal">
+        <a href="https://qr9398.buenacarta.com/" target="_blank" class="btn btn-white" style="font-size: 0.9rem; padding: 1rem 2.5rem;">📋 VER CARTA COMPLETA</a>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ABOUT -->
+<div class="page" id="page-about">
+  <section class="about-hero">
+    <div class="container">
+      <div class="section-tag reveal">¿Quiénes somos?</div>
+      <div class="section-title reveal">LOS MÁS <span class="accent">LOCOS</span></div>
+      <div class="about-grid reveal">
+        <div class="about-text">
+          <p>En Santa Locura no venimos a jugar… <span class="fire">venimos a liarla.</span></p>
+          <p>Aquí no hay platos normales. Aquí hay <span class="fire">BURGERS salvajes</span>, cargadas hasta arriba y combinaciones que no deberían existir… pero existen, son brutales y solo aquí EN SANTA LOCURA.</p>
+          <p>Pan de colores, salsas locas, carne potente, mezclas dulces + saladas + crujientes que te vuelan la cabeza.</p>
+          <p>Y cuando crees que ya lo has visto todo… <span class="fire">BOOM</span>, aparece otro plato más loco todavía.</p>
+          <p style="margin-top: 2rem; font-size: 1.2rem; color: var(--text);">¿Tienes hambre de verdad?<br>¿Te atreves con algo diferente?</p>
+          <p style="font-size: 1.3rem; color: var(--yellow); font-weight: 600;">🔥 Bienvenido a Santa Locura</p>
+          <p>Donde comer es una experiencia… y salir lleno es obligatorio.</p>
+        </div>
+        <div class="about-visual"><img src="burger1.jpg" alt="Santa Locura Burger" loading="lazy"></div>
+      </div>
+      <div class="about-chef-section reveal">
+        <div class="about-chef-img"><img src="aitor.jpg" alt="Aitor Hernández" loading="lazy"></div>
+        <div class="about-chef-info">
+          <h3>AITOR HERNÁNDEZ</h3>
+          <div class="chef-role">Chef & Fundador de Santa Locura</div>
+          <p>Un apasionado de la cocina que ha sabido combinar a la perfección <span style="color:var(--yellow)">tradición y creatividad</span> para deleitar a sus comensales. Detrás de cada plato hay una obsesión por lo diferente, por lo excesivo, por lo que hace que saques el móvil y digas "esto es una locura".</p>
+          <p style="margin-top: 1rem;">Su filosofía: <span style="color:var(--yellow)">producto de calidad, raciones generosas y un toque gamberro</span> que convierte cada comida en una experiencia inolvidable.</p>
+        </div>
+      </div>
+      <div class="about-stats reveal">
+        <div class="stat-item"><div class="stat-num">2KG</div><div class="stat-label">Cachopo XXL</div></div>
+        <div class="stat-item"><div class="stat-num">4.3★</div><div class="stat-label">Rating</div></div>
+        <div class="stat-item"><div class="stat-num">1200+</div><div class="stat-label">Reseñas</div></div>
+        <div class="stat-item"><div class="stat-num">∞</div><div class="stat-label">Locura</div></div>
+      </div>
+      <div style="margin-top: 4rem;" class="reveal">
+        <div class="section-tag">Nuestra cocina</div>
+        <div class="section-title">HECHO CON <span class="accent">PASIÓN</span></div>
+        <div class="about-gallery-grid">
+          <div class="agi"><img src="burger4.jpg" alt="Burgers" loading="lazy"></div>
+          <div class="agi"><img src="burger5.jpg" alt="Burgers variadas" loading="lazy"></div>
+          <div class="agi"><img src="bacon.jpg" alt="Bacon" loading="lazy"></div>
+          <div class="agi"><img src="quesos.jpg" alt="Quesos" loading="lazy"></div>
+          <div class="agi"><img src="risotto.jpg" alt="Risotto" loading="lazy"></div>
+          <div class="agi"><img src="albondigas.jpg" alt="Albóndigas" loading="lazy"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- FRANQUICIA -->
+<div class="page" id="page-franquicia">
+  <section class="franq-hero">
+    <div class="container">
+      <div class="section-tag reveal">Oportunidad de negocio</div>
+      <div class="section-title reveal">🎯 TE GUSTARÍA TENER<br>TU PROPIO <span class="accent">SANTA LOCURA</span>?</div>
+      <p style="color: var(--text-mid); max-width: 600px; margin: 1.5rem auto 0; line-height: 1.6;" class="reveal">Únete a la familia más loca de la restauración. Un concepto viral, raciones que rompen internet y una marca que <span style="color:var(--yellow)">ya no para de crecer</span>.</p>
+      <div class="franq-grid reveal">
+        <div class="franq-card"><div class="franq-num">01</div><h3>CONCEPTO VIRAL</h3><p>Una marca con ADN gamberro, food porn y redes sociales que generan contenido orgánico sin parar.</p></div>
+        <div class="franq-card"><div class="franq-num">02</div><h3>FORMACIÓN COMPLETA</h3><p>Te acompañamos en todo el proceso: apertura, operaciones, recetas, proveedores y marketing.</p></div>
+        <div class="franq-card"><div class="franq-num">03</div><h3>SOPORTE CONTINUO</h3><p>No estarás solo. Soporte constante del equipo Santa Locura para que tu negocio funcione.</p></div>
+      </div>
+      <div style="text-align: center; margin-top: 3rem;" class="reveal">
+        <a href="https://docs.google.com/document/d/1j6_QvN-qzqn1Yek4FrtvnB7_mX1eecSia_LDr02qu_U/edit?usp=sharing" target="_blank" class="btn btn-primary" style="font-size: 0.9rem; padding: 1rem 2.5rem;">📄 SOLICITAR DOSSIER</a>
+        <p style="color: var(--text-dim); font-size: 0.8rem; margin-top: 1rem;">O contáctanos en <a href="mailto:santalocura2023@hotmail.com" style="color: var(--yellow)">santalocura2023@hotmail.com</a></p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- CONTACTO -->
+<div class="page" id="page-contacto">
+  <section class="contacto-hero">
+    <div class="container">
+      <div class="section-tag reveal">Encuéntranos</div>
+      <div class="section-title reveal">CONTACTO &<br><span class="accent">UBICACIÓN</span></div>
+      <div class="contacto-grid reveal">
+        <div class="contacto-info-card">
+          <h3>VILADECANS</h3>
+          <div class="info-line"><span class="il-icon">📍</span><span>Carrer de Can Tries, 3, 08840 Viladecans, Barcelona</span></div>
+          <div class="info-line"><span class="il-icon">📞</span><span><a href="tel:+34930380930" style="color: var(--yellow);">930 38 09 30</a></span></div>
+          <div class="info-line"><span class="il-icon">✉️</span><span><a href="mailto:santalocura2023@gmail.com" style="color: var(--yellow);">santalocura2023@gmail.com</a></span></div>
+          <h3 style="margin-top: 2rem;">HORARIO</h3>
+          <div class="horario-table">
+            <div class="horario-row closed"><span class="day">Lunes</span><span class="hours">Cerrado</span></div>
+            <div class="horario-row closed"><span class="day">Martes</span><span class="hours">Cerrado</span></div>
+            <div class="horario-row"><span class="day">Miércoles</span><span class="hours">13:00–16:30 / 19:30–23:30</span></div>
+            <div class="horario-row"><span class="day">Jueves</span><span class="hours">13:00–16:30 / 19:30–23:30</span></div>
+            <div class="horario-row"><span class="day">Viernes</span><span class="hours">13:00–16:30 / 19:30–23:30</span></div>
+            <div class="horario-row"><span class="day">Sábado</span><span class="hours">13:00–16:30 / 19:30–23:30</span></div>
+            <div class="horario-row"><span class="day">Domingo</span><span class="hours">13:00–16:30 / 19:30–23:30</span></div>
+          </div>
+          <h3 style="margin-top: 2rem;">REDES SOCIALES</h3>
+          <div class="social-links">
+            <a href="https://www.instagram.com/santalocura2023/" target="_blank" class="social-link">📸 Instagram</a>
+            <a href="https://www.tiktok.com/@santalocura2023" target="_blank" class="social-link">🎵 TikTok</a>
+          </div>
+        </div>
+        <div class="map-container">
+          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2997.5!2d2.0098!3d41.3158!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x12a49d49bb33449f%3A0xe7d4119202ff6898!2sSanta%20Locura!5e0!3m2!1ses!2ses!4v1700000000000!5m2!1ses!2ses" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- LEGAL -->
+<div class="page" id="page-legal">
+  <section class="legal-hero">
+    <div class="container">
+      <div class="section-tag reveal">Información legal</div>
+      <div class="section-title reveal">DERECHO DE <span class="accent">IMAGEN</span></div>
+      <div class="legal-content reveal">
+        <h3>TRATAMIENTO DE IMÁGENES Y DERECHO DE IMAGEN</h3>
+        <p>En Santa Locura, informamos al usuario y cliente que durante el transcurso de los servicios y eventos celebrados en nuestro establecimiento, es posible que se realicen captaciones de imágenes (fotografía y vídeo) por parte de nuestro equipo.</p>
+        <h3>FINALIDAD</h3>
+        <p>Las imágenes captadas podrán ser utilizadas para la difusión de nuestras actividades, promoción del restaurante y creación de contenido para nuestras redes sociales oficiales (Instagram, TikTok, Facebook, etc.) y página web.</p>
+        <h3>LEGITIMACIÓN</h3>
+        <p>La base legal para este tratamiento es el interés legítimo de la empresa en promocionar su actividad, así como el consentimiento implícito del interesado al acceder al local habiendo sido informado mediante la cartelería visible en el acceso.</p>
+        <h3>DERECHOS</h3>
+        <p>Si usted aparece en alguna publicación y desea que su imagen sea retirada, puede ejercer su derecho de supresión u oposición enviando un email a <a href="mailto:santalocura2023@hotmail.com" style="color: var(--yellow);">santalocura2023@hotmail.com</a>, indicando la imagen concreta para proceder a su eliminación inmediata.</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <img src="logo.png" alt="Santa Locura" class="f-logo">
+      <p>Ideas, acciones, locura. El restaurante donde comer es una experiencia y salir lleno es obligatorio.</p>
+    </div>
+    <div class="footer-col"><h4>PÁGINAS</h4><ul><li><a href="#" onclick="navigate('home')">Home</a></li><li><a href="#" onclick="navigate('carta')">Carta</a></li><li><a href="#" onclick="navigate('about')">Sobre Nosotros</a></li><li><a href="#" onclick="navigate('franquicia')">Tu Santa Locura</a></li></ul></div>
+    <div class="footer-col"><h4>CONTACTO</h4><ul><li><a href="tel:+34930380930">930 38 09 30</a></li><li><a href="mailto:santalocura2023@gmail.com">Email</a></li><li><a href="#" onclick="navigate('contacto')">Ubicación</a></li></ul></div>
+    <div class="footer-col"><h4>REDES</h4><ul><li><a href="https://www.instagram.com/santalocura2023/" target="_blank">Instagram</a></li><li><a href="https://www.tiktok.com/@santalocura2023" target="_blank">TikTok</a></li></ul></div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Santa Locura Group. Todos los derechos reservados.</span>
+    <a href="#" onclick="navigate('legal')" style="color: var(--yellow);">Derecho de Imagen</a>
+  </div>
+</footer>
+
+<script>
+function navigate(page){event&&event.preventDefault();document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById('page-'+page).classList.add('active');document.querySelectorAll('.nav-links a[data-page]').forEach(a=>{a.classList.toggle('active',a.dataset.page===page)});window.scrollTo({top:0,behavior:'smooth'});closeMenu();setTimeout(initReveal,100)}
+function toggleMenu(){document.getElementById('navLinks').classList.toggle('open');document.querySelector('.hamburger').classList.toggle('open')}
+function closeMenu(){document.getElementById('navLinks').classList.remove('open');document.querySelector('.hamburger').classList.remove('open')}
+function initReveal(){const r=document.querySelectorAll('.reveal');const o=new IntersectionObserver(e=>{e.forEach(en=>{if(en.isIntersecting)en.target.classList.add('visible')})},{threshold:0.1});r.forEach(el=>{el.classList.remove('visible');o.observe(el)})}
+window.addEventListener('scroll',()=>{document.querySelector('.navbar').style.background=window.scrollY>50?'rgba(10,10,10,0.95)':'rgba(10,10,10,0.88)'});
+document.addEventListener('DOMContentLoaded',()=>{initReveal();document.querySelector('.nav-links a[data-page="home"]').classList.add('active')});
+</script>
+</body>
+</html>
